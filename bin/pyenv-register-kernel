@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+#
+# Summary: Create a jupyter kernel for the given version
+#
+# Usage: pyenv register-kernel [version_name]
+#
+# Create a jupyter kernel for the given version. If none is given,
+# it will use the current active version. If there is more than one
+# active version, it will use the first one.
+
+set -e
+[ -n "$PYENV_DEBUG" ] && set -x
+
+name=$1
+
+if [[ -z "$name" ]]; then
+    name=$(pyenv version-name | cut -d':' -f1)
+fi
+
+python=$(PYENV_VERSION=$name pyenv which python)
+
+jupyter_dir=$(jupyter --data-dir)
+kernel_dir=${jupyter_dir}/kernels/${name}
+
+echo "Installing jupyter kernel file $name for $python to $kerneldir ..."
+
+PYENV_VERSION=$name pyenv exec pip install -U ipykernel
+
+mkdir -p $kernel_dir
+
+kernel_file=${kernel_dir}/kernel.json
+
+cat > $kernel_file <<EOF
+{
+    "argv": [ "$python", "-m", "ipykernel", "-f", "{connection_file}" ],
+    "display_name": "$name",
+    "language": "python"
+}
+EOF
