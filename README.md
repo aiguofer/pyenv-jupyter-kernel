@@ -27,3 +27,15 @@ To create a kernel for all versions you've already created in pyenv:
 ```shell
 pyenv versions --bare | grep -v "/" | xargs -L 1 pyenv register-kernel
 ```
+
+To start up an interactive shell using the kernel for your currently active `pyenv` version:
+
+```shell
+jupyter console --kernel=$(pyenv version)
+```
+
+It might be useful to add an alias in your init file:
+
+```shell
+alias ipy='jupyter console --kernel=$(pyenv version)'
+```
