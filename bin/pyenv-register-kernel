@@ -20,7 +20,7 @@ fi
 python=$(PYENV_VERSION=$name pyenv which python)
 
 jupyter_dir=$(jupyter --data-dir)
-kernel_dir=${jupyter_dir}/kernels/${name}
+kernel_dir=${jupyter_dir}/kernels/pyenv_${name}
 
 echo "Installing jupyter kernel file $name for $python to $kernel_dir ..."
 
@@ -37,6 +37,6 @@ cat > $kernel_file <<EOF
     "display_name": "$name",
     "language": "python"
 }
+EOF
 
 echo "Kernel file created."
-EOF
