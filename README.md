@@ -31,11 +31,11 @@ pyenv versions --bare | grep -v "/" | xargs -L 1 pyenv register-kernel
 To start up an interactive shell using the kernel for your currently active `pyenv` version:
 
 ```shell
-jupyter console --kernel=$(pyenv version | head -n1 | cut -d ' ' -f1)
+jupyter console --kernel=$(pyenv version-name)
 ```
 
 It might be useful to add an alias in your init file:
 
 ```shell
-alias ipy="jupyter console --kernel=$(pyenv version | head -n1 | cut -d ' ' -f1)"
+alias ipy="jupyter console --kernel=$(pyenv version-name)"
 ```
