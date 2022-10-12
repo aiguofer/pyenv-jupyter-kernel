@@ -20,10 +20,11 @@ fi
 python=$(PYENV_VERSION=$name pyenv which python)
 
 jupyter_dir=$(jupyter --data-dir)
-kernel_dir=${jupyter_dir}/kernels/${name}
+kernel_dir=${jupyter_dir}/kernels/pyenv_${name}
 
-echo "Installing jupyter kernel file $name for $python to $kerneldir ..."
+echo "Installing jupyter kernel file $name for $python to $kernel_dir ..."
 
+echo "Upgrading (or installing) the ipykernel package for $name ..."
 PYENV_VERSION=$name pyenv exec pip install -U ipykernel
 
 mkdir -p $kernel_dir
@@ -37,3 +38,5 @@ cat > $kernel_file <<EOF
     "language": "python"
 }
 EOF
+
+echo "Kernel file created."
