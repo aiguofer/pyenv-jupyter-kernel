@@ -26,6 +26,7 @@ echo "Installing jupyter kernel file $name for $python to $kernel_dir ..."
 
 echo "Upgrading (or installing) the ipykernel package for $name ..."
 PYENV_VERSION=$name pyenv exec pip install -U ipykernel
+PYENV_VERSION=$name pyenv exec pip install -U --no-deps ipywidgets
 
 mkdir -p $kernel_dir
 
