@@ -19,7 +19,7 @@ fi
 
 python=$(PYENV_VERSION=$name pyenv which python)
 
-jupyter_dir=$(jupyter --data-dir)
+jupyter_dir=${JUPYTER_DIR:-$(jupyter --data-dir)}
 kernel_dir=${jupyter_dir}/kernels/pyenv_${name}
 
 echo "Installing jupyter kernel file $name for $python to $kernel_dir ..."
