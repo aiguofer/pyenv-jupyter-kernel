@@ -41,3 +41,7 @@ cat > $kernel_file <<EOF
 EOF
 
 echo "Kernel file created."
+
+# Copy the kernel logo as recent versions of JupyterLab require it
+cp $(dirname "$0")/*.png $kernel_dir
+echo "Copied kernel logos."
