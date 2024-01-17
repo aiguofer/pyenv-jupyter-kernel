@@ -8,6 +8,17 @@
 # it will use the current active version. If there is more than one
 # active version, it will use the first one.
 
+# Function to check if a Python package is installed
+check_python_package_installed() {
+    local package=$1
+    PYENV_VERSION=$name pyenv exec pip list --disable-pip-version-check | grep -F "$package" > /dev/null
+    if [ $? -eq 0 ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
 set -e
 [ -n "$PYENV_DEBUG" ] && set -x
 
@@ -19,25 +30,20 @@ fi
 
 python=$(PYENV_VERSION=$name pyenv which python)
 
-jupyter_dir=$(jupyter --data-dir)
-kernel_dir=${jupyter_dir}/kernels/pyenv_${name}
+# Check if Jupyter is installed
+if check_python_package_installed "jupyter"; then
+    jupyter_dir=$(PYENV_VERSION=$name pyenv exec jupyter --data-dir)
+    kernel_dir=${jupyter_dir}/kernels/pyenv_${name}
 
-echo "Installing jupyter kernel file $name for $python to $kernel_dir ..."
+    echo "Installing jupyter kernel file $name for $python to $kernel_dir ..."
 
-echo "Upgrading (or installing) the ipykernel package for $name ..."
-PYENV_VERSION=$name pyenv exec pip install -U ipykernel
-PYENV_VERSION=$name pyenv exec pip install -U --no-deps ipywidgets
+    echo "Upgrading (or installing) the ipykernel package for $name ..."
+    PYENV_VERSION=$name pyenv exec pip install -U --disable-pip-version-check ipykernel
+    PYENV_VERSION=$name pyenv exec pip install -U --no-deps --disable-pip-version-check ipywidgets
 
-mkdir -p $kernel_dir
-
-kernel_file=${kernel_dir}/kernel.json
-
-cat > $kernel_file <<EOF
-{
-    "argv": [ "$python", "-m", "ipykernel", "-f", "{connection_file}" ],
-    "display_name": "$name",
-    "language": "python"
-}
-EOF
-
-echo "Kernel file created."
+    echo "Creating kernel..."
+    PYENV_VERSION=$name pyenv exec python -m ipykernel install --user --name pyenv_$name --display-name "pyenv_$name"
+    echo "Kernel file created."
+else
+    echo "Jupyter is not installed in the pyenv environment '$name'."
+fi
